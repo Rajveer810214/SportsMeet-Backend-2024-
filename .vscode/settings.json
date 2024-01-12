@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/40bd5d37-a2b4-4f07-8995-44e620f8bb3c/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/SportsMeet-2024",
+  "appService.deploySubpath": "backend"
+}
