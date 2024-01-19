@@ -20,7 +20,7 @@ router.get('/eachstudentsports', fetchUser, async (req, res) => {
     // Find all events for the user and populate the sportId field with the 'Sport' model
     const userEvents = await Event.find({ userId })
       .populate('sportId', 'sportName sportType')
-      .select('sportId attendance position')
+      .select('sportId attendance position serialNumber')
       .exec();
     if (!userEvents || userEvents.length === 0) {
       return res.status(404).json({ success: false, message: 'No events found for the user' });
@@ -31,7 +31,8 @@ router.get('/eachstudentsports', fetchUser, async (req, res) => {
       eventType: event.sportId.sportType,
       attendance: event.attendance,
       position: event.position,
-      sportId: event.sportId._id
+      sportId: event.sportId._id,
+      serialNumber:event.serialNumber,
     }));
     res.status(200).json(participatedSports);
   } catch (error) {

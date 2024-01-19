@@ -29,7 +29,6 @@ router.post('/sendcertificate', isSuperAdmin,
         try {
           const admins = await Admin.findOne({email : email});
           // Toggle isCertificate for all admins
-        console.log(admins)
           if(!admins){
             return res
             .status(500)
@@ -56,7 +55,6 @@ router.post('/sendcertificate', isSuperAdmin,
 router.get('/iscertificate', async(req, res) => {
   try {
     const admin = await Admin.find({email : process.env.ADMINEMAIL});
-    console.log(admin)
     return res.status(200).json({
       success: true,
       isShowCertificate:admin[0].isShowCertificate

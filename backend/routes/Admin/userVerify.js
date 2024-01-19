@@ -8,7 +8,6 @@ router.post('/userverify/:id', isSuperAdmin, async (req, res) => {
     try {
     const student_id = req.params.id;
     const student = await studentInfo.findById(student_id);
-    console.log(student.isVerified);
     student.isVerified = true;
     await student.save();
     return res.status(200).json({ success: true, message: student }); 

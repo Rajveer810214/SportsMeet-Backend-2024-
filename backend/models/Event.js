@@ -1,3 +1,4 @@
+// Event model
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
@@ -20,6 +21,10 @@ const EventSchema = new Schema({
     type: Number,
     enum: [0, 1, 2, 3, 4],
     default: 0,
+  },
+  serialNumber: {
+    type: Number,
+    default:0
   },
 });
 

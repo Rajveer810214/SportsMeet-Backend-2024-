@@ -12,7 +12,6 @@ router.post('/makeadmin', isSuperAdmin, async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        console.log(user._id)
         const makeAdmin = await studentInfo.findOneAndUpdate(
             { _id: user._id },
             { role: role },

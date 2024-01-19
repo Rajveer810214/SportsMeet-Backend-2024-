@@ -30,6 +30,8 @@ const makeAdmin = require('./routes/Admin/makeAdmin');
 const showResult = require('./routes/UserSide/showResultEventWise')
 const manuallyVerify = require('./routes/Admin/userVerify');
 const announcement = require('./routes/Admin/Announcement');
+const generateSerialNo = require('./routes/Admin/GenerateSerialNo/GenSerialNo');
+
 // Assigning the route handlers to specific paths
 //user side
 app.use('/api/auth', authRoute);
@@ -53,7 +55,7 @@ app.use('/api/update', makeAdmin);
 app.use('/api/view', showResult);
 app.use('/api/mannually', manuallyVerify);
 app.use('/api', announcement);
-
+app.use('/api', generateSerialNo);
 // Start the server
 const port = process.env.PORT;
 app.listen(port, () => {
