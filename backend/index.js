@@ -31,7 +31,6 @@ const showResult = require('./routes/UserSide/showResultEventWise')
 const manuallyVerify = require('./routes/Admin/userVerify');
 const announcement = require('./routes/Admin/Announcement');
 const generateSerialNo = require('./routes/Admin/GenerateSerialNo/GenSerialNo');
-
 // Assigning the route handlers to specific paths
 //user side
 app.use('/api/auth', authRoute);
