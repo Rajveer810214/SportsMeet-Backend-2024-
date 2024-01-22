@@ -20,14 +20,14 @@ const sendOTP = (email, validate) => {
         <p>Welcome to the GNDEC Athletic Meet 2024 Registration App! 🎉 Verify your account using the OTP provided below:</p>
         <p><b>🔒 Verification OTP: ${otp} 🔒</b></p>
         <p>Join us for an unforgettable sports extravaganza 🏆🏃‍♂️🏃‍♀️ and showcase your athletic prowess. Stay tuned for event updates, special guests, and surprises! 🎊</p>
-        <p>For any assistance, contact [Support Email/Phone]. Let's celebrate the spirit of sportsmanship together! 🤝</p>
+        <p>For any assistance, contact mail: gndecsports@gmail.com. Let's celebrate the spirit of sportsmanship together! 🤝</p>
         <p>Best regards,</p>
         <p>Team GNDEC Athletic Meet 2024 🏅</p>`
         : `<p>Hello ${frontName}! 👋</p>
         <p>We received a request to reset your password for the GNDEC Athletic Meet 2024 account. Use the OTP provided below to proceed with the reset:</p>
         <p><b>🔒 Reset OTP: ${otp} 🔒</b></p>
         <p>If you didn't request a password reset, please ignore this email. Your account is safe and no action is required.</p>
-        <p>For any assistance, contact [Support Email/Phone]. We're here to help you!</p>
+        <p>For any assistance, mail: gndecsports@gmail.com. We're here to help you!</p>
         <p>Best regards,</p>
         <p>Team GNDEC Athletic Meet 2024 🏅</p>`;
     const resultSubject = validate === "Verification" ? "🏅 GNDEC Athletic Meet 2024: Verify Your Account 🏅" : "🔑 Password Reset: GNDEC Athletic Meet 2024 🔑"

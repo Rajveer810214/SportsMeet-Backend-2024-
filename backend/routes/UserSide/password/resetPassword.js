@@ -42,7 +42,7 @@ router.post('/forgotpassword', body('email').custom((value) => {
           // Store the OTP in your database or data structure
           const otp = response.otp
           storedOTPs[email] = otp; // Uncomment this line if you have 'storedOTPs' defined
-          return res.status(200).json({ success: true, message: 'OTP sent successfully', otp });
+          return res.status(200).json({ success: true, message: 'OTP sent successfully' });
         })
         .catch(error => {
           console.error('Error generating OTP:', error);
