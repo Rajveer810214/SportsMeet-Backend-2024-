@@ -3,67 +3,89 @@ const router = express.Router();
 const studentInfo = require('../../../models/Student');
 const academicInfo = require('../../../models/StudAcaInfo');
 const { body, validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Admin = require('../../../models/Admin');
+const rateLimit = require('express-rate-limit');
 const JWT_Token = process.env.JWT_TOKEN;
+
 router.use(express.json());
 
-router.post('/signup',
+// Rate limiting middleware for signup route
+const signupLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5, // 5 requests per minute
+  message: 'Too many signup requests from this IP, please try again later.',
+});
+
+router.post('/signup', signupLimiter, [
   body('name', 'name should have a minimum length of 3').isLength({ min: 3 }),
   body('password', 'password should have a minimum length of 5').isLength({ min: 5 }),
   body('email').custom((value) => {
-    // Check if the email ends with "@gndec.ac.in"
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     if (!emailRegex.test(value) || !value.endsWith('@gndec.ac.in')) {
       throw new Error('Invalid email format or email must end with @gndec.ac.in');
     }
-    return true; // Return true if validation passes
+    return true;
   }),
   body('phone').custom((value) => {
-    // Check if the phone number is exactly 10 digits and doesn't start with "0"
     if (!/^[1-9]\d{9}$/.test(value)) {
       throw new Error('Invalid phone number. It should be exactly 10 digits and should not start with "0"');
     }
-    return true; // Return true if validation passes
+    return true;
   }),
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, message: "Invalid Credentials", errors: errors.array() });
-    }
-    const validateUser = await studentInfo.findOne({ email: req.body.email });
-    const validatephone = await studentInfo.findOne({ phone: req.body.phone });
-    if (validateUser) {
-      return res.status(400).json({ success: false, message: 'email' });
-    }
-    if (validatephone) {
-      return res.status(400).json({ success: false, message: 'phone' });
-    }
-    try {
-      const myPlaintextPassword = req.body.password;
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(myPlaintextPassword, salt);
-      const { name, email, phone, gender, progressValue } = req.body;
-      // Find the maximum jersey number assigned
-      const studentDetail = await studentInfo.create({
-        name: name,
-        email: email,
-        password: hash,
-        phone: phone,
-        gender: gender,
-        progressValue: progressValue,
-        isVerified: false,
-        academicInfo: {}
-      });
-      await studentDetail.save();
-      // Instead of returning just progressValue, return the entire studentDetail object
-      return res.status(201).json({ success: true, studentDetail });
-    } catch (error) {
-      res.status(400).json({ success: false, message: error.keyValue });
+    const userAgent = req.get('User-Agent');
+
+    // Check if the user-agent appears to be from a real browser
+    if (!userAgent || userAgent.startsWith('Mozilla')) {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, message: "Invalid Credentials", errors: errors.array() });
+      }
+
+      const validateUser = await studentInfo.findOne({ email: req.body.email });
+      const validatephone = await studentInfo.findOne({ phone: req.body.phone });
+
+      if (validateUser) {
+        return res.status(400).json({ success: false, message: 'email' });
+      }
+
+      if (validatephone) {
+        return res.status(400).json({ success: false, message: 'phone' });
+      }
+
+      try {
+        const myPlaintextPassword = req.body.password;
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(myPlaintextPassword, salt);
+        const { name, email, phone, gender, progressValue } = req.body;
+
+        const studentDetail = await studentInfo.create({
+          name: name,
+          email: email,
+          password: hash,
+          phone: phone,
+          gender: gender,
+          progressValue: progressValue,
+          isVerified: false,
+          academicInfo: {}
+        });
+
+        await studentDetail.save();
+
+        return res.status(201).json({ success: true, studentDetail });
+      } catch (error) {
+        res.status(400).json({ success: false, message: error.keyValue });
+      }
+    } else {
+      // Handle automated request
+      // console.log('Automated request detected. Blocked.');
+      return res.status(403).json({ error: 'Access Forbidden' });
     }
   }
-);
+]);
+
 
 router.post('/academicinfo/:id', async (req, res) => {
   try {

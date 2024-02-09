@@ -56,8 +56,8 @@ app.use('/api/mannually', manuallyVerify);
 app.use('/api', announcement);
 app.use('/api', generateSerialNo);
 // Start the server
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 app.listen(port, () => {
-    console.log(`App is listening on port ${port}`);
+    console.log(`App is listening on port ${port} `);
 });
-// module.exports = app
+module.exports = app
