@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const connectToMongo = require('./db');
 const app = express();
+require('dotenv').config();
+
 app.use(cors());
 // Connect to MongoDB
 connectToMongo();
@@ -16,6 +18,8 @@ const passwordResetRoute = require('./routes/UserSide/password/resetPassword');
 const startRoute = require('./routes/UserSide/wakingServer');
 const sportsRoute = require('./routes/UserSide/Sports/selectSports');
 const getAnnoucement = require('./routes/UserSide/getAnnouncement')
+const ldapRouter = require('./routes/Ldap/ldap');
+
 // Admin Routes
 const sendcertificateRoute = require('./routes/Admin/showCertificate');
 const markQrAttendace = require('./routes/Admin/Attendance/qrAttend')
@@ -40,6 +44,8 @@ app.use('/api/password', passwordResetRoute);
 app.use('/api/start', startRoute);
 app.use('/api/sports', sportsRoute)
 app.use('/api', getAnnoucement);
+app.use('/api/ldap', ldapRouter);
+
 //Admin side
 app.use('/api', sendcertificateRoute);
 app.use('/api/attendance', markQrAttendace);
